@@ -20,3 +20,13 @@
     color: cornflowerblue;
     background-color: blue;
 }
+
+.letras{
+    background-color: rgb(166, 166, 172);
+    color: rgb(10, 10, 10);
+}
+
+.titulos{
+    background-color: rgb(55, 55, 65);
+    color: rgb(255, 255, 255);
+}

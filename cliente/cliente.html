@@ -12,7 +12,6 @@
         crossorigin="anonymous"></script>
     <title>Document</title>
 </head>
-
 <body>
     <div class="container">
         <div class="title">
@@ -22,8 +21,6 @@
         <div class="row">
             <form id="basic-form">
                 <div class="container p-col-3">
-
-                    <div class="row">
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="name" class="form-label">Nombre</label>
@@ -46,27 +43,30 @@
                                 <input type="text" id="age" class="form-control" placeholder="description">
                             </div>
                         </div>
-
-                    </div>
                     <br>
                     <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-4 ">
+                        <div class="col-lg-4 text-center">
                             <div class="botton">
                                 <button type="button" onclick="getData()" class="btn btn-primary">Crear</button>
                             </div>
                         </div>
-                        <div class="col-lg-4 ">
+                        <div class="col-lg-4 text-center">
                             <div class="botton">
                                 <button type="button" onclick="ver()" class="btn btn-success">ver</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <div class="botton">
+                                <button type="button" onclick="Actualizar()" class="btn btn-secondary">Actualizar</button>
                             </div>
                         </div>
                     </div>
             </form>
         </div>
     </div>
-    <div class="container">
-        <table class="table">
+    <br>
+    <br>
+        <table class="table table-striped titulos">
             <thead>
               <tr>
                 <th scope="col">Id</th>
@@ -74,15 +74,16 @@
                 <th scope="col">Email</th>
                 <th scope="col">Contraseña</th>
                 <th scope="col">Edad</th>
+                <th scope="col">Eliminar</th>
+                <th scope="col">Editar</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                  <tbody id="miResultado">
+                  <tbody id="miResultado" class="letras">
     
             </tbody>
         </table>
-    </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="./cliente.js"></script>

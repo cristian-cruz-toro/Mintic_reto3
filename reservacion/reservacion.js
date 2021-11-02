@@ -3,6 +3,7 @@ obtener();
 obtenerCliente();
 obtenerCuatrimoto();
 id_actualizar=0;
+
 function getData(){
     var config = {};
     $('input').each(function () {
@@ -12,12 +13,14 @@ config.data;
 console.log(config);
     crear(config);
 }
+
 function ver(){
     location.reload();
-}
+  }
+
 function obtener(){
 $.ajax({
-    url: 'http://localhost:8080/'+'api/Message/all',
+    url: 'http://localhost:8080/'+'api/Reservation/all',
     type:'GET',
     datatype:"JSON",
     success:function(respuesta){
@@ -27,23 +30,27 @@ $.ajax({
     console.log(misItems.length);
     for(i=0;i<misItems.length;i++){
         $("#miResultado").append("<tr>");
-        $("#miResultado").append("<td>"+misItems[i].idMessage+"</td>");
-        $("#miResultado").append("<td>"+misItems[i].messageText+"</td>");
+        $("#miResultado").append("<td>"+misItems[i].idReservation+"</td>");
+        $("#miResultado").append("<td>"+misItems[i].startDate+"</td>");
+        $("#miResultado").append("<td>"+misItems[i].devolutionDate+"</td>");
+        $("#miResultado").append("<td>"+misItems[i].status+"</td>");
         $("#miResultado").append("<td>"+misItems[i].quadbike.brand+"</td>");
         $("#miResultado").append("<td>"+misItems[i].client.name+"</td>");
-        $("#miResultado").append('<td><button class="btn btn-danger" onclick="deletedata('+misItems[i].idMessage+')">Eliminar</button></td>');
-        $("#miResultado").append('<td><button class="btn btn-secondary" onclick="obtenerItemEspecifico('+misItems[i].idMessage+')">Cargar</button></td>'); 
+        $("#miResultado").append('<td><button class="btn btn-danger" onclick="deletedata('+misItems[i].idReservation+')">Eliminar</button></td>');
+        $("#miResultado").append('<td><button class="btn btn-secondary" onclick="obtenerItemEspecifico('+misItems[i].idReservation+')">Cargar</button></td>'); 
         $("#miResultado").append("</tr>");
       }
     },
-    error: function(jqXHR, textStatus, errorThrown) {      
+    error: function(jqXHR, textStatus, errorThrown) {
+            
     }
 });
 }
 
 function crear(){
     var elemento={
-        "messageText":$("#messageText").val(),
+        "startDate":$("#startDate").val(),
+        "devolutionDate":$("#devolutionDate").val(),
         "client":{"idClient":parseInt($("#foo").val())},
         "quadbike":{"id":parseInt($("#foo2").val())},
         }
@@ -53,7 +60,7 @@ function crear(){
         contentType: "application/json; charset=utf-8",
         datatype:"JSON",
         data:JSON.stringify(elemento),
-        url:'http://localhost:8080/'+'api/Message/save', 
+        url:'http://localhost:8080/'+'api/Reservation/save', 
         success:function(response) {
             console.log(response);
           }, 
@@ -66,7 +73,7 @@ function deletedata(idElemento){
     };
     var dataToSend=JSON.stringify(elemento);
     $.ajax({
-      url:'http://localhost:8080/'+'api/Message/'+idElemento,
+      url:'http://localhost:8080/'+'api/Reservation/'+idElemento,
       type:'DELETE',  
       contentType:'application/json',
       success:function(response) {
@@ -77,40 +84,44 @@ function deletedata(idElemento){
   });
   ver();
 }
+
 function obtenerItemEspecifico(idItem){
   $.ajax({
-      url:'http://localhost:8080/'+'api/Message/obtener/'+idItem,
+      url:'http://localhost:8080/'+'api/Reservation/obtener/'+idItem,
       type:'GET',
       dataType: 'json',
       success:function(response) {
         console.log(response);
         var item=response;
         id_actualizar=item.id;
-        $("#messageText").val(item.messageText);
-        $("#foo").val(item.client.name);
-        $("#quadbike").val(item.quadbike.brand);
-        console.log(item.client.name);
-        console.log(item.quadbike.brand);
+        $("#startDate").val(item.startDate);
+        $("#devolutionDate").val(item.devolutionDate);
+        $("#client").val(item.client);
+        $("#quadbike").val(item.quadbike);
       },
       error: function(jqXHR, textStatus, errorThrown) {
       }
   });
 }
+
 function Actualizar(){
   if(id_actualizar !=0){
+    console.log("id_actualizar");
       console.log(id_actualizar);
-      var elemento={
-        "messageText":$("#messageText").val(),
-        "client":{"idClient":parseInt($("#foo").val())},
-        "quadbike":{"id":parseInt($("#foo2").val())},
-        }
+      let elemento={
+          "idReservation": parseInt(id_actualizar),  
+          "startDate":$("#startDate").val(),
+          "devolutionDate":$("#devolutionDate").val(),
+          "client":$("#client").val(),
+          "quadbike":$("#quadbike").val(),
+          }
       console.log(elemento);
       $.ajax({
           type:'PUT',
           contentType: "application/json; charset=utf-8",
           datatype:"JSON",
           data:JSON.stringify(elemento),
-          url:'http://localhost:8080/'+'api/Message/update', 
+          url:'http://localhost:8080/'+'api/Category/update', 
           success:function(response) {
               console.log(response);
           }, 
@@ -177,7 +188,7 @@ function Actualizar(){
              }
 
         var foo2 = misItems.map(function(bar){
-          return '<option value"bar.name">'+bar.id+"  "+bar.brand+'</option>'
+          return '<option value"bar.name">'+bar.id+"  "+bar.name+'</option>'
         })
         document.getElementById("foo2").innerHTML = foo2;
 

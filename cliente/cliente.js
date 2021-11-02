@@ -1,6 +1,11 @@
 console.log("entro");
 obtener();
 
+id_actualizar=0;
+function ver(){
+  location.reload();
+}
+
 function getData(){
     var config = {};
     $('input').each(function () {
@@ -11,9 +16,31 @@ console.log(config);
     crear(config);
 }
 
-function ver(){
-    location.reload();
-  }
+function crear(){
+  if(id_actualizar==0){
+    var elemento={
+        "name":$("#name").val(),
+        "email":$("#email").val(),
+        "password":$("#password").val(),
+        "age":parseInt($("#age").val())
+        }
+    console.log(elemento);
+    $.ajax({
+        type:'POST',
+        contentType: "application/json; charset=utf-8",
+        datatype:"JSON",
+        data:JSON.stringify(elemento),
+        url:'http://localhost:8080/'+'api/Client/save', 
+        success:function(response) {
+            console.log(response);
+        }, 
+    });
+  }else{
+    $(document).ready(function() {
+        alert ("No se puede crear solo actualizar"); 
+    });
+}
+}
 
 function obtener(){
 $.ajax({
@@ -33,10 +60,9 @@ $.ajax({
         $("#miResultado").append("<td>"+misItems[i].email+"</td>");
         $("#miResultado").append("<td>"+misItems[i].password+"</td>");
         $("#miResultado").append("<td>"+misItems[i].age+"</td>");
-        /* $("#miResultado").append('<td><button class="btn btn-danger" onclick="deletedata('+misItems[i].id+')">Eliminar</button></td>');
-        $("#miResultado").append('<td><button class="btn btn-secondary" onclick="obtenerItemEspecifico('+misItems[i].id+')">Cargar</button></td>'); */
+        $("#miResultado").append('<td><button class="btn btn-danger" onclick="deletedata('+misItems[i].idClient+')">Eliminar</button></td>');
+        $("#miResultado").append('<td><button class="btn btn-secondary" onclick="obtenerItemEspecifico('+misItems[i].idClient+')">Cargar</button></td>'); 
         $("#miResultado").append("</tr>");
-
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -45,70 +71,69 @@ $.ajax({
 });
 }
 
-function crear(ArchivoCrear){
-    var elemento={
-        "brand":$("#brand").val(),
-        "year":parseInt($("#model").val()),
-        "category":{"id":parseInt($("#foo").val())},
-        "name":$("#description").val(),
-        "description":$("#description").val()
-        }
-    console.log(elemento);
-    $.ajax({
-        type:'POST',
-        contentType: "application/json; charset=utf-8",
-        datatype:"JSON",
-        data:JSON.stringify(elemento),
-        url:'http://localhost:8080/'+'api/Quadbike/save', 
-        success:function(response) {
-            console.log(response);
-        }, 
-    });
-}
+
 
 function deletedata(idElemento){
-    var elemento={
-      id:idElemento
-    };
-    var dataToSend=JSON.stringify(elemento);
-    //JSON= JavaScript Object Notation
-    $.ajax({
-          dataType:'json',
-          data:dataToSend,
-          url:"",
-          type:'DELETE',
-          contentType:'application/json',
-          success:function(response) {
-            console.log(response);
-          },
-          
-          error: function(jqXHR, textStatus, errorThrown) {
-                
-          }
-      });
+  console.log();
+  $.ajax({
+    url:'http://localhost:8080/'+'api/Client/'+idElemento,
+    type:'DELETE',  
+    contentType:'application/json',
+    success:function(response) {
+      console.log(response);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {      
     }
+});
+ver();
+}
 
     function obtenerItemEspecifico(idItem){
+
+      $.ajax({
+        url:'http://localhost:8080/'+'api/Client/obtener/'+idItem,
+        type:'GET',
+        dataType: 'json',
+        success:function(response) {
+          console.log(response);
+          var item=response;
+          id_actualizar=item.idClient;
+          $("#id_actualizacion").val(item.idClient);
+          $("#name").val(item.name);
+          $("#email").val(item.email);
+          $("#password").val(item.password);
+          $("#age").val(item.age);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+        }
+    });
+  }
+
+  function Actualizar(){
+    if(id_actualizar !=0){
+        console.log(id_actualizar);
+        var elemento={
+          "idClient":parseInt(id_actualizar), 
+          "name":$("#name").val(),
+          "email":$("#email").val(),
+          "password":$("#password").val(),
+          "age":parseInt($("#age").val())
+          }
+        console.log(elemento);
         $.ajax({
-            dataType: 'json',
-            url:"https://g9a84339c54bed2-apextjpe.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/quadbike/quadbike/"+idItem,
-            type:'GET',
+            type:'PUT',
+            contentType: "application/json; charset=utf-8",
+            datatype:"JSON",
+            data:JSON.stringify(elemento),
+            url:'http://localhost:8080/'+'api/Client/update', 
             success:function(response) {
-              console.log(response);
-              var item=response.items[0];
-      
-              $("#id").val(item.id);
-              $("#brand").val(item.brand);
-              $("#model").val(item.model);
-              $("#category_id").val(item.category_id);
-              $("#name").val(item.name);
-      
-      
-            },
-            
-            error: function(jqXHR, textStatus, errorThrown) {
-                  
-            }
+                console.log(response);
+            }, 
         });
-      
-      }
+    }else{
+        $(document).ready(function() {
+            alert ("No se puede actualizar solo crear"); 
+        });
+    }
+    ver();
+  }

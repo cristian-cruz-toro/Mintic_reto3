@@ -24,10 +24,6 @@
                 <div class="container p-col-3">
 
                     <div class="row">
-                        <div class="col-lg-6">
-                            <label for="id" class="form-label">ID</label>
-                            <input type="text" id="id" class="form-control">
-                        </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="brand" class="form-label">Marca</label>
@@ -56,39 +52,43 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-4 ">
+                        <div class="col-lg-4 text-center">
                             <div class="botton">
                                 <button type="button" onclick="getData()" class="btn btn-primary">Crear</button>
                             </div>
                         </div>
-                        <div class="col-lg-4 ">
+                        <div class="col-lg-4 text-center">
                             <div class="botton">
                                 <button type="button" onclick="ver()" class="btn btn-success">ver</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <div class="botton">
+                                <button type="button" onclick="Actualizar()" class="btn btn-secondary">Actualizar</button>
                             </div>
                         </div>
                     </div>
             </form>
         </div>
     </div>
-    <div class="container">
-        <table class="table">
+    <br>
+    <br>
+        <table class="table table-striped titulos">
             <thead>
               <tr>
-                <th scope="col">id</th>
-                <th scope="col">brand</th>
-                <th scope="col">model</th>
-                <th scope="col">category_id</th>
-                <th scope="col">name</th>
+                <th scope="col">Id</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Model</th>
+                <th scope="col">Category_id</th>
+                <th scope="col">Name</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                  <tbody id="miResultado">
+                  <tbody id="miResultado" class="letras">
     
             </tbody>
         </table>
-    </div>
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

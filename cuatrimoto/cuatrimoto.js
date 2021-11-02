@@ -1,7 +1,7 @@
 console.log("entro");
 obtener();
 obtenerCategory();
-
+id_actualizar=0;
 function getData(){
     var config = {};
     $('input').each(function () {
@@ -14,6 +14,32 @@ console.log(config);
 
 function ver(){
     location.reload();
+  }
+  function crear(){
+    if(id_actualizar==0){
+      var elemento={
+          "brand":$("#brand").val(),
+          "year":parseInt($("#model").val()),
+          "category":{"id":parseInt($("#foo").val())},
+          "name":$("#description").val(),
+          "description":$("#description").val()
+          }
+      console.log(elemento);
+      $.ajax({
+          type:'POST',
+          contentType: "application/json; charset=utf-8",
+          datatype:"JSON",
+          data:JSON.stringify(elemento),
+          url:'http://localhost:8080/'+'api/Quadbike/save', 
+          success:function(response) {
+              console.log(response);
+            }, 
+      });
+    }else{
+      $(document).ready(function() {
+        alert ("No se puede crear solo actualizar"); 
+    });
+    }
   }
 
 function obtener(){
@@ -33,8 +59,8 @@ $.ajax({
         $("#miResultado").append("<td>"+misItems[i].year+"</td>");
         $("#miResultado").append("<td>"+misItems[i].category.name+"</td>");
         $("#miResultado").append("<td>"+misItems[i].name+"</td>");
-        /* $("#miResultado").append('<td><button class="btn btn-danger" onclick="deletedata('+misItems[i].id+')">Eliminar</button></td>');
-        $("#miResultado").append('<td><button class="btn btn-secondary" onclick="obtenerItemEspecifico('+misItems[i].id+')">Cargar</button></td>'); */
+        $("#miResultado").append('<td><button class="btn btn-danger" onclick="deletedata('+misItems[i].id+')">Eliminar</button></td>');
+        $("#miResultado").append('<td><button class="btn btn-secondary" onclick="obtenerItemEspecifico('+misItems[i].id+')">Cargar</button></td>'); 
         $("#miResultado").append("</tr>");
       }
     },
@@ -44,72 +70,93 @@ $.ajax({
 });
 }
 
-function crear(ArchivoCrear){
-    var elemento={
-        "brand":$("#brand").val(),
-        "year":parseInt($("#model").val()),
-        "category":{"id":parseInt($("#foo").val())},
-        "name":$("#description").val(),
-        "description":$("#description").val()
-        }
-    console.log(elemento);
-    $.ajax({
-        type:'POST',
-        contentType: "application/json; charset=utf-8",
-        datatype:"JSON",
-        data:JSON.stringify(elemento),
-        url:'http://localhost:8080/'+'api/Quadbike/save', 
-        success:function(response) {
-            console.log(response);
-          }, 
-    });
-}
 
 function deletedata(idElemento){
-    var elemento={
-      id:idElemento
-    };
-    var dataToSend=JSON.stringify(elemento);
-    //JSON= JavaScript Object Notation
-    $.ajax({
-          dataType:'json',
-          data:dataToSend,
-          url:"",
-          type:'DELETE',
-          contentType:'application/json',
-          success:function(response) {
-            console.log(response);
-          },
-          
-          error: function(jqXHR, textStatus, errorThrown) {
-                
-          }
-      });
+  $.ajax({
+        url:'http://localhost:8080/'+'api/Quadbike/'+idElemento,
+        type:'DELETE',  
+        contentType:'application/json',
+        success:function(response) {
+          console.log(response);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {      
+        }
+    });
+ver();
     }
 
     function obtenerItemEspecifico(idItem){
         $.ajax({
             dataType: 'json',
-            url:"https://g9a84339c54bed2-apextjpe.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/quadbike/quadbike/"+idItem,
+            url:'http://localhost:8080/'+'api/Quadbike/obtener/'+idItem,
             type:'GET',
+            dataType: 'json',
             success:function(response) {
               console.log(response);
-              var item=response.items[0];
-      
+              var item=response;
+              id_actualizar=item.id;
               $("#id").val(item.id);
               $("#brand").val(item.brand);
               $("#model").val(item.model);
               $("#category_id").val(item.category_id);
               $("#name").val(item.name);
-      
-      
             },
-            
-            error: function(jqXHR, textStatus, errorThrown) {
-                  
+            error: function(jqXHR, textStatus, errorThrown) {    
             }
         });
-      
+      }
+      function Actualizar(){
+        if(id_actualizar !=0){
+            console.log(id_actualizar);
+            let elemento={
+                "id": parseInt(id_actualizar),  
+                "name":$("#name").val(),
+                "description":$("#description").val(),
+                }
+            console.log(elemento);
+            $.ajax({
+                type:'PUT',
+                contentType: "application/json; charset=utf-8",
+                datatype:"JSON",
+                data:JSON.stringify(elemento),
+                url:'http://localhost:8080/'+'api/Quadbike/update', 
+                success:function(response) {
+                    console.log(response);
+                }, 
+            });
+        }else{
+            $(document).ready(function() {
+                alert ("No se puede actualizar solo crear"); 
+            });
+        }
+        ver();
+      }
+
+      function Actualizar(){
+        if(id_actualizar !=0){
+            console.log(id_actualizar);
+            let elemento={
+                "id": parseInt(id_actualizar),  
+                "name":$("#name").val(),
+                "description":$("#description").val(),
+                }
+            console.log(elemento);
+            $.ajax({
+                type:'PUT',
+                contentType: "application/json; charset=utf-8",
+                datatype:"JSON",
+                data:JSON.stringify(elemento),
+                url:'http://localhost:8080/'+'api/Quadbike/update', 
+                success:function(response) {
+                    console.log(response);
+                }, 
+            });
+        }else{
+            $(document).ready(function() {
+                alert ("No se puede actualizar solo crear"); 
+            });
+        }
+        ver();
       }
 
       function obtenerCategory(){
